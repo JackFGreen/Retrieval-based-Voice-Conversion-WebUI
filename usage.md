@@ -10,6 +10,10 @@ infer_to 合成后的音频
 
 Audacity 修剪音频
 
+## 下载 assets 资源包
+
+下载后放到项目根目录
+
 ## 新建文件夹
 
 1. mkdir usage && cd usage
