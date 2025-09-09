@@ -592,32 +592,39 @@ class RMVPE:
         return f0
 
     def infer_from_audio(self, audio, thred=0.03):
-        # torch.cuda.synchronize()
-        # t0 = ttime()
-        if not torch.is_tensor(audio):
-            audio = torch.from_numpy(audio)
-        mel = self.mel_extractor(
-            audio.float().to(self.device).unsqueeze(0), center=True
-        )
-        # print(123123123,mel.device.type)
-        # torch.cuda.synchronize()
-        # t1 = ttime()
-        hidden = self.mel2hidden(mel)
-        # torch.cuda.synchronize()
-        # t2 = ttime()
-        # print(234234,hidden.device.type)
-        if "privateuseone" not in str(self.device):
-            hidden = hidden.squeeze(0).cpu().numpy()
-        else:
-            hidden = hidden[0]
-        if self.is_half == True:
-            hidden = hidden.astype("float32")
+        try:
+            # torch.cuda.synchronize()
+            # t0 = ttime()
+            if not torch.is_tensor(audio):
+                audio = torch.from_numpy(audio)
+            mel = self.mel_extractor(
+                audio.float().to(self.device).unsqueeze(0), center=True
+            )
+            # print(123123123,mel.device.type)
+            # torch.cuda.synchronize()
+            # t1 = ttime()
+            hidden = self.mel2hidden(mel)
+            # torch.cuda.synchronize()
+            # t2 = ttime()
+            # print(234234,hidden.device.type)
+            if "privateuseone" not in str(self.device):
+                hidden = hidden.squeeze(0).cpu().numpy()
+            else:
+                hidden = hidden[0]
+            if self.is_half == True:
+                hidden = hidden.astype("float32")
 
-        f0 = self.decode(hidden, thred=thred)
-        # torch.cuda.synchronize()
-        # t3 = ttime()
-        # print("hmvpe:%s\t%s\t%s\t%s"%(t1-t0,t2-t1,t3-t2,t3-t0))
-        return f0
+            f0 = self.decode(hidden, thred=thred)
+            # torch.cuda.synchronize()
+            # t3 = ttime()
+            # print("hmvpe:%s\t%s\t%s\t%s"%(t1-t0,t2-t1,t3-t2,t3-t0))
+
+            logger.info(f">>> RMVPE infer_from_audio Success: {f0.shape}")
+            return f0
+        
+        except Exception:  # pylint: disable=broad-exception-caught
+            info = traceback.format_exc()
+            logger.info(">>> RMVPE Failed: %s", info)
 
     def to_local_average_cents(self, salience, thred=0.05):
         # t0 = ttime()

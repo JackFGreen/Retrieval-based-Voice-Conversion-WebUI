@@ -151,7 +151,9 @@ class Pipeline(object):
                     is_half=self.is_half,
                     device=self.device,
                 )
+            logger.info(">>> infer_from_audio start")
             f0 = self.model_rmvpe.infer_from_audio(x, thred=0.03)
+            logger.info(">>> infer_from_audio after")
 
             if "privateuseone" in str(self.device):  # clean ortruntime memory
                 del self.model_rmvpe.model
@@ -454,4 +456,6 @@ class Pipeline(object):
         del pitch, pitchf, sid
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
+
+        logger.info(">>> pipeline return audio_opt")
         return audio_opt

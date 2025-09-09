@@ -25,36 +25,66 @@ check_dir "./assets/uvr5_weights/onnx_dereverb_By_FoxJoy"
 
 echo "dir check finished."
 
-echo "required files check start."
+# echo "required files check start."
+# check_file_pretrained() {
+#   printf "checking %s\n" "$2"
+#   if [ -f "./assets/""$1""/""$2""" ]; then
+#       printf "%s in ./assets/%s checked.\n" "$2" "$1" 
+#   else
+#       echo failed. starting download from huggingface.
+#       if command -v aria2c > /dev/null 2>&1; then
+#           aria2c --check-certificate=false --console-log-level=error -c -x 16 -s 16 -k 1M https://huggingface.co/lj1995/VoiceConversionWebUI/resolve/main/"$1"/"$2" -d ./assets/"$1" -o "$2"
+#           [ -f "./assets/""$1""/""$2""" ] && echo "download successful." || { echo "please try again!" && exit 1; }
+#       else
+#           echo "aria2c command not found. Please install aria2c and try again."
+#           exit 1
+#       fi
+#   fi
+# }
 check_file_pretrained() {
   printf "checking %s\n" "$2"
-  if [ -f "./assets/""$1""/""$2""" ]; then
-      printf "%s in ./assets/%s checked.\n" "$2" "$1" 
+  if [ -f "./assets/$1/$2" ]; then
+      printf "%s in ./assets/%s checked.\n" "$2" "$1"
   else
       echo failed. starting download from huggingface.
-      if command -v aria2c > /dev/null 2>&1; then
-          aria2c --console-log-level=error -c -x 16 -s 16 -k 1M https://huggingface.co/lj1995/VoiceConversionWebUI/resolve/main/"$1"/"$2" -d ./assets/"$1" -o "$2"
-          [ -f "./assets/""$1""/""$2""" ] && echo "download successful." || { echo "please try again!" && exit 1; }
-      else
-          echo "aria2c command not found. Please install aria2c and try again."
-          exit 1
-      fi
+      url="https://huggingface.co/lj1995/VoiceConversionWebUI/resolve/main/$1/$2"
+      outdir="./assets/$1"
+      outfile="$2"
+      
+      curl -L --retry 5 --retry-delay 5 --insecure -o "$outdir/$outfile" "$url"
+          [ -f "$outdir/$outfile" ] && echo "download successful." || { echo "please try again!" && exit 1; }
   fi
+
 }
 
+
+# check_file_special() {
+#   printf "checking %s\n" "$2"
+#   if [ -f "./assets/""$1""/""$2""" ]; then
+#       printf "%s in ./assets/%s checked.\n" "$2" "$1" 
+#   else
+#       echo failed. starting download from huggingface.
+#       if command -v aria2c > /dev/null 2>&1; then
+#           aria2c --console-log-level=error -c -x 16 -s 16 -k 1M https://huggingface.co/lj1995/VoiceConversionWebUI/resolve/main/"$2" -d ./assets/"$1" -o "$2"
+#           [ -f "./assets/""$1""/""$2""" ] && echo "download successful." || { echo "please try again!" && exit 1; }
+#       else
+#           echo "aria2c command not found. Please install aria2c and try again."
+#           exit 1
+#       fi
+#   fi
+# }
 check_file_special() {
   printf "checking %s\n" "$2"
-  if [ -f "./assets/""$1""/""$2""" ]; then
-      printf "%s in ./assets/%s checked.\n" "$2" "$1" 
+  if [ -f "./assets/$1/$2" ]; then
+      printf "%s in ./assets/%s checked.\n" "$2" "$1"
   else
       echo failed. starting download from huggingface.
-      if command -v aria2c > /dev/null 2>&1; then
-          aria2c --console-log-level=error -c -x 16 -s 16 -k 1M https://huggingface.co/lj1995/VoiceConversionWebUI/resolve/main/"$2" -d ./assets/"$1" -o "$2"
-          [ -f "./assets/""$1""/""$2""" ] && echo "download successful." || { echo "please try again!" && exit 1; }
-      else
-          echo "aria2c command not found. Please install aria2c and try again."
-          exit 1
-      fi
+      url="https://huggingface.co/lj1995/VoiceConversionWebUI/resolve/main/$2"
+      outdir="./assets/$1"
+      outfile="$2"
+
+      curl -L --retry 5 --retry-delay 5 --insecure -o "$outdir/$outfile" "$url"
+          [ -f "$outdir/$outfile" ] && echo "download successful." || { echo "please try again!" && exit 1; }
   fi
 }
 

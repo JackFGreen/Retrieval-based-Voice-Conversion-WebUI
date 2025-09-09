@@ -62,7 +62,7 @@ if config.dml == True:
         return res
 
     fairseq.modules.grad_multiply.GradMultiply.forward = forward_dml
-i18n = I18nAuto()
+i18n = I18nAuto(language='zh_CN')
 logger.info(i18n)
 # 判断是否有能用来训练和加速推理的N卡
 ngpu = torch.cuda.device_count()
@@ -1175,7 +1175,7 @@ with gr.Blocks(title="RVC WebUI") as app:
                 )
             )
             with gr.Row():
-                exp_dir1 = gr.Textbox(label=i18n("输入实验名"), value="mi-test")
+                exp_dir1 = gr.Textbox(label=i18n("输入实验名"), value="vocals")
                 sr2 = gr.Radio(
                     label=i18n("目标采样率"),
                     choices=["40k", "48k"],
@@ -1212,7 +1212,7 @@ with gr.Blocks(title="RVC WebUI") as app:
                 with gr.Row():
                     trainset_dir4 = gr.Textbox(
                         label=i18n("输入训练文件夹路径"),
-                        value=i18n("E:\\语音音频+标注\\米津玄师\\src"),
+                        value=i18n("/Users/jack/Desktop/vocalme/vocals"),
                     )
                     spk_id5 = gr.Slider(
                         minimum=0,
